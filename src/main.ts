@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Message } from "discord.js";
 import * as dotenv from "dotenv";
-
 import * as config from "./config.js";
+import bwaa from "./commands/bwaa";
 
 dotenv.config({
     quiet: true
@@ -23,6 +23,7 @@ client.on("messageCreate", async (message: Message): Promise<void> => {
     // Ignore bots & and messages without prefix
     if (message.author.bot || !message.content.startsWith(config.PREFIX)) {
         return
+
     }
 
     const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
@@ -32,36 +33,10 @@ client.on("messageCreate", async (message: Message): Promise<void> => {
         if (message.author.id !== config.OWNER)
             return;
 
-        await message.reply("Restarting...");
+        await message.reply(`Restarting ${config.emotes.CERBER_LOADING}`);
         process.exit(0);
     } else if (command === "bwaa") {
-        const bwaa =  (): string => {
-            if (Math.random() < 0.5) {
-                return config.emotes.NEURO_BWAA;
-
-            } else {
-                return config.emotes.EVIL_BWAA;
-            }
-        }
-
-        if (args.length > 0 && typeof args[0] == "string")
-        {
-            if (parseInt(args[0]) > 0 && parseInt(args[0]) <= config.BWAA_LIMIT) {
-                let bwaaString = "";
-                for (let i = 0; i < parseInt(args[0]); i++) {
-                    bwaaString += (bwaa() + " ");
-                }
-
-                await message.reply(bwaaString);
-            } else if (parseInt(args[0]) > config.BWAA_LIMIT) {
-                await message.reply(`${config.emotes.NO} Too many ${bwaa()}s`)
-            } else {
-                await message.reply(bwaa());
-            }
-        } else {
-            await message.reply(bwaa());
-        }
-
+        await bwaa(message, args);
     } else {
         await message.reply(`Unknown command \`${config.PREFIX}${command}\``);
     }
