@@ -14,8 +14,13 @@ export default async function bwaa(message: Message, args: string[]): Promise<vo
 
     if (args.length > 0 && typeof args[0] == "string")
     {
+        let bwaaLimit = config.BWAA_LIMIT;
+
+        if (config.CustomBwaaLimits[message.author.id])
+            bwaaLimit = config.CustomBwaaLimits[message.author.id] as number;
+
         const val = parseFloat(args[0]);
-        if (val > 0 && val <= config.BWAA_LIMIT || message.author.id == config.OWNER) {
+        if (val > 0 && val <= bwaaLimit) {
             let bwaaString = "";
             const roundedVal = utils.probabilisticRound(val)
             for (let i = 0; i < roundedVal; i++) bwaaString += (bwaa() + " ");

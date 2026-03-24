@@ -1,6 +1,7 @@
 
 const users = {
-    FIRECRAFTER: "1173363433975062590"
+    FIRECRAFTER: "1173363433975062590",
+    SOMEONE: "1129909651778056242"
 }
 
 interface Emotes {
@@ -25,7 +26,17 @@ const PREFIX = "_";
 const OWNER = users.FIRECRAFTER;
 
 const BWAA_LIMIT = 30;
+
+interface UserBwaaLimit {
+    [id: string]: number
+}
+
+const CustomBwaaLimits: UserBwaaLimit = {
+    [users.SOMEONE]: BWAA_LIMIT + 5,
+    [OWNER]: Infinity
+};
+
 const EMBED_COLOR = 0xFF00FF;
 const LEADERBOARD_LENGTH_LIMIT = 10;
 
-export { PREFIX, OWNER, emotes, BWAA_LIMIT, EMBED_COLOR, LEADERBOARD_LENGTH_LIMIT };
+export { PREFIX, OWNER, emotes, BWAA_LIMIT, EMBED_COLOR, LEADERBOARD_LENGTH_LIMIT, CustomBwaaLimits };
