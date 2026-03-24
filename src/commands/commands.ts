@@ -26,7 +26,7 @@ function registerAll(commands: CommandManager) {
     commands.registerCommand("bwaa", bwaa, "bwaa!");
     commands.registerCommand("fish", async function ({ message }) { await message.reply({ embed: fish.fish(message) }); }, "this command is fishy");
     commands.registerCommand("points", async function ({ message }) { await message.reply({ embed: fish.getPoints(message) }); }, "get your fishing points");
-    commands.registerCommand("points", async function ({ message }) { await message.reply({ embed: fish.getLeaderboardEmbed(config.LEADERBOARD_LENGTH_LIMIT) }); }, "get fishing leaderboard");
+    commands.registerCommand("leaderboard", async function ({ message }) { await message.reply({ embed: fish.getLeaderboardEmbed(config.LEADERBOARD_LENGTH_LIMIT) }); }, "get fishing leaderboard");
 
     commands.registerCommand("help", notImplemented, "helps you with commands"); // TODO: "help" command
 }
