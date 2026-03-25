@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A simple Discord bot",
   "scripts": {
-    "start": "./start.fish"
+      "build": "tsc",
+      "start": "bun dist/main.js"
   },
   "type": "module",
   "devDependencies": {
