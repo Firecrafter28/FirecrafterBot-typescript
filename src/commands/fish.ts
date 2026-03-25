@@ -1,5 +1,5 @@
 import * as utils from "../utils.js";
-import * as config from "../config.js";
+import config from "../config.js";
 import { Database } from "bun:sqlite";
 import { EmbedBuilder, Message } from "discord.js";
 
@@ -26,7 +26,7 @@ const CATCHES: Catch[] = [
     { "name": "Cardboard Box",            "value": 5   },
     { "name": "Eliv Plush",               "value": 100 },
     { "name": "Nwero Plush",              "value": 100 },
-    { "name": config.emotes.JOEL,         "value": 50  },
+    { "name": config.emotes.joel,         "value": 50  },
     { "name": "Tutel",                    "value": 80  },
     { "name": "Cookie",                   "value": 70  },
     { "name": "RAM",                      "value": 500 },
@@ -34,8 +34,8 @@ const CATCHES: Catch[] = [
     { "name": "Harpoon",                  "value": 200 },
     { "name": "Programmer's Socks",       "value": 70  },
     { "name": "Metal Pipes",              "value": 150 },
-    { "name": config.emotes.NEURO_BWAA,   "value": 300 },
-    { "name": config.emotes.EVIL_BWAA,    "value": 300 },
+    { "name": config.emotes.neuroBwaa,   "value": 300 },
+    { "name": config.emotes.evilBwaa,    "value": 300 },
     { "name": "The Duck on Neuro's Head", "value": 250 },
     { "name": "[Filtered]",               "value": 150 }
 ];
@@ -106,7 +106,7 @@ export function fish(message: Message): EmbedBuilder {
     return utils.makeEmbed({
         title: "Fishing",
         description: description,
-        color: config.EMBED_COLOR
+        color: config.colors.embed
     });
 }
 
@@ -132,7 +132,7 @@ export function getPoints(message: Message): EmbedBuilder {
     return utils.makeEmbed({
         title: "Points",
         description: `${points}`,
-        color: config.EMBED_COLOR
+        color: config.colors.embed
     });
 }
 
@@ -155,7 +155,7 @@ export function buildLeaderboardEmbed(rows: Array<UserPoints>): EmbedBuilder {
     return utils.makeEmbed({
         title: "Leaderboard",
         description: lines.length > 0 ? lines.join("\n") : "N/A",
-        color: config.EMBED_COLOR
+        color: config.colors.embed
     });
 }
 

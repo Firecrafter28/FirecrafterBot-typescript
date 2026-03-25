@@ -1,6 +1,6 @@
 import {Client, GatewayIntentBits, Message, type Channel, TextChannel, type EmbedBuilder} from "discord.js";
 import * as dotenv from "dotenv";
-import * as config from "./config.js";
+import * as c from "./config.js";
 import bwaa from "./commands/bwaa.js";
 import * as fish from "./commands/fish.js"
 import { buildLeaderboardEmbed } from "./commands/fish.js";
@@ -27,25 +27,23 @@ client.once("clientReady", async (): Promise<void> => {
 
     const channel = <Channel>client.channels.cache.get(process.env.ONLINE_ALERT_CHANNEL as string);
     if (channel instanceof TextChannel) {
-        await channel.send(`${config.emotes.ONLINE} Online`);
+        await channel.send(`${c.config.emotes.online} Online`);
     }
 });
 
 client.on("messageCreate", async (message: Message): Promise<void> => {
     // Ignore bots & and messages without prefix
-    if (message.author.bot || !message.content.startsWith(config.PREFIX)) {
-        return
-    }
+    if (message.author.bot || !message.content.startsWith(c.getGlobalGuildOverridableOption("prefix", message.guild))) return;
 
-    const isOwner = message.author.id === config.OWNER;
+    const isOwner = c.config.globalOwners.includes(message.author.id);
 
-    const args = message.content.slice(config.PREFIX.length).trim().split(/ +/);
-    const command = args.shift()?.toLowerCase();
+    const args = message.content.slice(c.getGlobalGuildOverridableOption("prefix", message.guild).length).trim().split(/ +/);
+    const command = args.shift();
 
     let embed: EmbedBuilder;
-
+    
     if (!await commands.handle(command || "", { commandManager: commands, client, args, message, isOwner })) {
-        await message.reply(`Unknown command \`${config.PREFIX}${command}\``);
+        await message.reply(`Unknown command \`${c.getGlobalGuildOverridableOption("prefix", message.guild)}${command}\``);
         console.log("An invalid command was sent: " + message.content);
     }
 });

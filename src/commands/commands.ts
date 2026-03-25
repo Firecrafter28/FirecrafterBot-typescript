@@ -1,32 +1,56 @@
 import { type CommandCallArgs, type CommandHandler, CommandManager } from "../commandManager.js";
-import * as config from "../config.js"
+import config, { loadAll, pauseAutosaves, saveAll, setAutosavesPaused } from "../config.js"
+import { saveExit } from "../utils.js";
 import bwaa from "./bwaa.js";
 import * as fish from "./fish.js"
 
 async function notImplemented({ message }: CommandCallArgs) {
-    message.reply(`Not implemented ${config.emotes.NO}`);
+    message.reply(`Not implemented ${config.emotes.no}`);
 }
 
 function registerAll(commands: CommandManager) {
+    commands.registerCommand("save", async function ({ message, isOwner }) {
+        if (!isOwner) return;
+        
+        await message.reply(`Saving data ${config.emotes.cerberLoading}`);
+        console.log("Manual save triggered by " + message.author.tag);
+        saveAll();
+    });
+    commands.registerCommand("reload", async function ({ message, isOwner }) {
+        if (!isOwner) return;
+        
+        await message.reply(`Reloading data ${config.emotes.cerberLoading}`);
+        console.log("Manual data reload triggered by " + message.author.tag);
+        loadAll();
+    });
+    commands.registerCommand("toggleAutosave", async function ({ message, isOwner }) {
+        if (!isOwner) return;
+        
+        setAutosavesPaused(!pauseAutosaves);
+        await message.reply(`Autosaving is now ${pauseAutosaves ? "**off** (for this session!)" : "**on**"}`);
+        console.log(`Autosaving ${pauseAutosaves ? "disabled (for this session)" : "enabled"} by ` + message.author.tag);
+        loadAll();
+    });
+    
     commands.registerCommand("restart", async function({ message, isOwner }) {
         if (!isOwner) return;
 
-        await message.reply(`Restarting ${config.emotes.CERBER_LOADING}`);
+        await message.reply(`Restarting ${config.emotes.cerberLoading}`);
         console.log("Restart triggered by " + message.author.tag);
-        process.exit(1);
+        saveExit(1);
     });
     commands.registerCommand("stop", async function({ message, isOwner }) {
         if (!isOwner) return;
 
-        await message.reply(`Stopping ${config.emotes.CERBER_LOADING}`);
+        await message.reply(`Stopping ${config.emotes.cerberLoading}`);
         console.log("Stop triggered by " + message.author.tag);
-        process.exit(0);
+        saveExit(0);
     });
 
     commands.registerCommand("bwaa", bwaa, "bwaa!");
-    commands.registerCommand("fish", async function ({ message }) { await message.reply({ embeds: [fish.fish(message)]}) }, "this command is fishy");
+    commands.registerCommand("fish", async function ({ message }) { await message.reply({ embeds: [fish.fish(message)] }); }, "this command is fishy");
     commands.registerCommand("points", async function ({ message }) { await message.reply({ embeds: [fish.getPoints(message)] }); }, "get your fishing points");
-    commands.registerCommand("leaderboard", async function ({ message }) { await message.reply({ embeds: [fish.getLeaderboardEmbed(config.LEADERBOARD_LENGTH_LIMIT)] }); }, "get fishing leaderboard");
+    commands.registerCommand("leaderboard", async function ({ message }) { await message.reply({ embeds: [fish.getLeaderboardEmbed(config.leaderboardLengthLimit)] }); }, "get fishing leaderboard");
 
     commands.registerCommand("help", notImplemented, "helps you with commands"); // TODO: "help" command
 }

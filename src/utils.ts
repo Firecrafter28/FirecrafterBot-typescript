@@ -1,17 +1,18 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, User, Guild, type Snowflake } from "discord.js";
+import { saveAll } from "./config.js"
 
-function getRandomItem<T>(array: T[]): T {
+export function getRandomItem<T>(array: T[]): T {
     const index = Math.floor(Math.random() * array.length);
     return array[index] as T;
 }
 
-interface EmbedOptions {
+export interface EmbedOptions {
     title: string,
     description: string,
     color: number
 }
 
-function makeEmbed(options: EmbedOptions): EmbedBuilder {
+export function makeEmbed(options: EmbedOptions): EmbedBuilder {
     const embed = new EmbedBuilder();
     embed.setTitle(options.title);
     embed.setDescription(options.description);
@@ -20,11 +21,21 @@ function makeEmbed(options: EmbedOptions): EmbedBuilder {
     return embed;
 }
 
-function probabilisticRound(num: number): number {
+export function probabilisticRound(num: number): number {
     const lower = Math.floor(num);
     const fraction = num - lower;
     if (fraction === 0) return lower;
     return Math.random() < fraction ? lower + 1 : lower;
 }
 
-export { getRandomItem, makeEmbed, probabilisticRound };
+export function saveExit(code: number) {
+    saveAll();
+    process.exit(code);
+}
+
+export type UserId = string | Snowflake;
+export type GuildId = string | Snowflake;
+export type UserResolvable = User | UserId;
+export type GuildResolvable = Guild | GuildId;
+export function userIdHelper(user: UserResolvable): UserId { return (typeof user == "string") ? user : user.id }
+export function guildIdHelper(guild: GuildResolvable): GuildId { return (typeof guild == "string") ? guild : guild.id }
